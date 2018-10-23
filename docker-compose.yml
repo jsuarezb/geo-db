@@ -1,0 +1,21 @@
+version: '3'
+services:
+  dbpostgres:
+    image: postgres:9.6
+    ports:
+      - 5439:5432
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pguser
+      POSTGRES_DB: pgdb
+  api:
+    build: ./api
+    volumes:
+      - ./api:/app/
+    ports:
+      - 3000:3000
+    environment:
+      RACK_ENV: production
+      RAILS_ENV: production
+    depends_on:
+      - dbpostgres
