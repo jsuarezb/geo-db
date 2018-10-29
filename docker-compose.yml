@@ -26,3 +26,4 @@ services:
       RAILS_ENV: production
     depends_on:
       - dbpostgres
+      - dbmongo

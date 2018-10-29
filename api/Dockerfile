@@ -14,6 +14,7 @@ WORKDIR /app
 
 COPY Gemfile /app/Gemfile
 COPY Gemfile.lock /app/Gemfile.lock
+
 RUN bundle install -j 8 --frozen --without development test
 
 CMD ["bundle", "exec", "puma"]
