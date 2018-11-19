@@ -1,22 +1,34 @@
 module Services
   module Mongo
     class Nearest
-      def self.call(lat, lng, n = 10)
-        # TODO: replace with query
-        MongoDB[:localidades]
+      def self.call_sphere(lat, lng, n = 10)
+        MongoDB[:sube]
           .find({
-            'geometry.coordinates' => {
+            'geometry' => {
               '$near' => {
                 '$geometry' => {
                   type: 'Point',
                   coordinates: [lng, lat]
-                }
+                },
+                '$minDistance' => 0,
+                '$maxDistance' => 50
               }
             }
           })
           .limit(n)
           .map { |localidad| localidad['geometry']['coordinates'] }
-        # [[54.36, 32.2], [54.33, 32.8]]
+      end
+
+      def self.call_normal(lat, lng, n = 10)
+        MongoDB[:sube]
+          .find({
+            'geometry.coordinates' => {
+              '$near' => [lng, lat],
+              '$maxDistance' => 50 / 1000 / 111.12
+            }
+          })
+          .limit(n)
+          .map { |localidad| localidad['geometry']['coordinates'] }
       end
     end
   end

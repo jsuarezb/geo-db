@@ -3,11 +3,15 @@ class MongoController < ApplicationController
     lat = params[:lat].to_f
     lng = params[:lng].to_f
     n   = params[:n].to_i
-    with_index = params[:index].to_i == 0 ? false : true
     threshold  = params[:th].to_f
+    method     = params[:method]
 
     start_time = Time.now
-    nearest    = Services::Mongo::Nearest.call(lat, lng, n)
+    nearest    =
+      case method
+      when '2dsphere' then Services::Mongo::Nearest.call_sphere(lat, lng, n)
+      when '2d'       then Services::Mongo::Nearest.call_normal(lat, lng, n)
+      end
     end_time   = Time.now
     result     = { result: nearest, query_milliseconds: (end_time - start_time) * 1000 }
 

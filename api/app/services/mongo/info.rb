@@ -3,9 +3,20 @@ module Services
     class Info
       def self.call(lat, lng)
         # TODO: Replace with query
-        MongoDB[:localidades]
-          .find()
-          .first
+        MongoDB[:sube]
+          .find({
+              geometry: {
+                '$near' => {
+                  '$geometry' => {
+                    type: 'Point',
+                    coordinates: [lng, lat]
+                },
+                '$minDistance' => 0,
+                '$maxDistance' => 50
+              }
+            }
+          })
+          .limit(n)
       end
     end
   end
