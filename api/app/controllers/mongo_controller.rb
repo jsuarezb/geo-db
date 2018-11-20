@@ -9,8 +9,8 @@ class MongoController < ApplicationController
     start_time = Time.now
     nearest    =
       case method
-      when '2dsphere' then Services::Mongo::Nearest.call_sphere(lat, lng, n)
-      when '2d'       then Services::Mongo::Nearest.call_normal(lat, lng, n)
+      when '2dsphere' then Services::Mongo::Nearest.call_sphere(lat, lng, n, threshold)
+      when '2d'       then Services::Mongo::Nearest.call_normal(lat, lng, n, threshold)
       end
     end_time   = Time.now
     result     = { result: nearest, query_milliseconds: (end_time - start_time) * 1000 }

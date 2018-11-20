@@ -1,7 +1,7 @@
 module Services
   module Mongo
     class Nearest
-      def self.call_sphere(lat, lng, n = 10)
+      def self.call_sphere(lat, lng, n = 10, threshold = 50)
         MongoDB[:sube]
           .find({
             'geometry' => {
@@ -19,12 +19,12 @@ module Services
           .map { |localidad| localidad['geometry']['coordinates'] }
       end
 
-      def self.call_normal(lat, lng, n = 10)
+      def self.call_normal(lat, lng, n = 10, threshold = 50)
         MongoDB[:sube]
           .find({
             'geometry.coordinates' => {
               '$near' => [lng, lat],
-              '$maxDistance' => 50 / 1000 / 111.12
+              '$maxDistance' => threshold / 1000 / 111.12
             }
           })
           .limit(n)
